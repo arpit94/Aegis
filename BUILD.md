@@ -73,3 +73,18 @@ $HOME/opt/cross/bin/$TARGET-gcc --version
 ```bash
 export PATH="$HOME/opt/cross/bin:$PATH"
 ```
+
+
+
+## Building the os after the cross-compiler is setup.
+
+* Till now only support for the bootloader has been added
+* Running the following command will run the assembler to generate object file for bootloader
+```bash
+make bootloader
+```
+
+* Running the following command will clean all the output/object/generated files
+```bash
+make clean
+```
