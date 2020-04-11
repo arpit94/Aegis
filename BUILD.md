@@ -88,3 +88,20 @@ make bootloader
 ```bash
 make clean
 ```
+
+* Basic Hello World Kernel added.
+* To compile just the kernel run the following
+```bash
+make kernel
+```
+
+* To compile both kernel and bootloader, just run the following : 
+```bash
+make all
+```
+or just
+```
+make
+```
+
+* `make clean` will clean all object files

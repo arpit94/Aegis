@@ -9,15 +9,28 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 
+
 ECHO=echo
 CAT=cat
 RM=rm
 
+.PHONY : all
+all : bootloader kernel
+
+.PHONY : bootloader
 bootloader: boot.o
+.PHONY : kernel
+kernel: kernel.o
 
 boot.o: boot.s
 	@$(ECHO) -n Assembling the bootloader...
 	@$(TARGET)-as $^ -o $@ 2> temp.log || touch temp.errors
+	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
+	@$(RM) -f temp.errors temp.log
+
+kernel.o: kernel.c
+	@$(ECHO) -n Compiling the kernel...
+	@$(TARGET)-gcc -c $^ -o $@ -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
 	@$(RM) -f temp.errors temp.log
 
