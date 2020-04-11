@@ -1,3 +1,4 @@
+OUTPUT_FILE = myos.bin
 TARGET=i686-elf
 
 NO_COLOR=\x1b[0m
@@ -15,7 +16,10 @@ CAT=cat
 RM=rm
 
 .PHONY : all
-all : bootloader kernel
+all: bootloader kernel
+
+.PHONY : install
+install: $(OUTPUT_FILE)
 
 .PHONY : bootloader
 bootloader: boot.o
@@ -34,8 +38,14 @@ kernel.o: kernel.c
 	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
 	@$(RM) -f temp.errors temp.log
 
+$(OUTPUT_FILE): boot.o kernel.o linker.ld
+	@$(ECHO) -n Linking the kernel with bootloader...
+	@$(TARGET)-gcc -T $(word 3, $^) -o $@ -ffreestanding -O2 -nostdlib $(word 1, $^) $(word 2, $^) -lgcc
+	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
+	@$(RM) -f temp.errors temp.log
+
 .PHONY : clean
 clean:
 	@$(ECHO) -n Cleaning object files...
-	@$(RM) -f *.o temp.log temp.errors
+	@$(RM) -f *.o temp.log temp.errors $(OUTPUT_FILE)
 	@$(ECHO) "$(OK_STRING)"
