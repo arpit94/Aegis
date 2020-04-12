@@ -1,4 +1,4 @@
-OUTPUT_FILE = myos.bin
+OUTPUT_FILE = isodir/boot/myos.bin
 TARGET=i686-elf
 
 NO_COLOR=\x1b[0m
@@ -16,10 +16,10 @@ CAT=cat
 RM=rm
 
 .PHONY : all
-all: bootloader kernel
+all: bootloader kernel $(OUTPUT_FILE)
 
 .PHONY : install
-install: $(OUTPUT_FILE)
+install: myos.iso
 
 .PHONY : bootloader
 bootloader: boot.o
@@ -44,8 +44,14 @@ $(OUTPUT_FILE): boot.o kernel.o linker.ld
 	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
 	@$(RM) -f temp.errors temp.log
 
+myos.iso:
+	@$(ECHO) -n Generating the iso file...
+	@grub-mkrescue -o myos.iso isodir 2> temp.log || touch temp.errors
+	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.l    og && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT)     temp.log; else $(ECHO) "$(OK_STRING)"; fi;
+	@$(RM) -f temp.errors temp.log
+
 .PHONY : clean
 clean:
 	@$(ECHO) -n Cleaning object files...
-	@$(RM) -f *.o temp.log temp.errors $(OUTPUT_FILE)
+	@$(RM) -f *.o temp.log temp.errors $(OUTPUT_FILE) myos.iso
 	@$(ECHO) "$(OK_STRING)"
