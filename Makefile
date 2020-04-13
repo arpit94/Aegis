@@ -1,4 +1,5 @@
-OUTPUT_FILE = isodir/boot/aegis.bin
+ISO_FILE=aegis.iso
+OUTPUT_FILE=isodir/boot/aegis.bin
 TARGET=i686-elf
 
 NO_COLOR=\x1b[0m
@@ -19,7 +20,7 @@ RM=rm
 all: bootloader kernel $(OUTPUT_FILE)
 
 .PHONY : install
-install: myos.iso
+install: $(ISO_FILE)
 
 .PHONY : bootloader
 bootloader: boot.o
@@ -44,14 +45,14 @@ $(OUTPUT_FILE): boot.o kernel.o linker.ld
 	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.log && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT) temp.log; else $(ECHO) "$(OK_STRING)"; fi;
 	@$(RM) -f temp.errors temp.log
 
-myos.iso:
+$(ISO_FILE):
 	@$(ECHO) -n Generating the iso file...
-	@grub-mkrescue -o myos.iso isodir 2> temp.log || touch temp.errors
+	@grub-mkrescue -o $@ isodir 2> temp.log || touch temp.errors
 	@if test -e temp.errors; then $(ECHO) "$(ERROR_STRING)" && $(CAT) temp.l    og && false; elif test -s temp.log; then $(ECHO) "$(WARN_STRING)" && $(CAT)     temp.log; else $(ECHO) "$(OK_STRING)"; fi;
 	@$(RM) -f temp.errors temp.log
 
 .PHONY : clean
 clean:
 	@$(ECHO) -n Cleaning object files...
-	@$(RM) -f *.o temp.log temp.errors $(OUTPUT_FILE) myos.iso
+	@$(RM) -f *.o temp.log temp.errors $(OUTPUT_FILE) $(ISO_FILE)
 	@$(ECHO) "$(OK_STRING)"
