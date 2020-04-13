@@ -1,4 +1,4 @@
-OUTPUT_FILE = isodir/boot/myos.bin
+OUTPUT_FILE = isodir/boot/aegis.bin
 TARGET=i686-elf
 
 NO_COLOR=\x1b[0m
