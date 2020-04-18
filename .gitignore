@@ -54,3 +54,5 @@ dkms.conf
 #OS destination files
 *.bin
 *.iso
+isodir
+sysroot

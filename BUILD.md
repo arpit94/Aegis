@@ -11,7 +11,7 @@ Things to install:
 * GMP https://ftp.gnu.org/gnu/gmp/ **
 * MPC https://ftp.gnu.org/gnu/mpc/ **
 * MPFR https://ftp.gnu.org/gnu/mpfr/ **
-* Texinfo https://ftp.gnu.org/gnu/texinfo/ ** 
+* Texinfo https://ftp.gnu.org/gnu/texinfo/ **
 * ISL http://isl.gforge.inria.fr/ **
 
  ** Marked packages were compiled from source using the following commands
@@ -39,7 +39,7 @@ export PATH="$PREFIX/bin:$PATH"
 
 ```bash
 cd $HOME/src
- 
+
 mkdir build-binutils
 cd build-binutils
 ../binutils-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
@@ -51,10 +51,10 @@ make install
 
 ```bash
 cd $HOME/src
- 
+
 # The $PREFIX/bin dir _must_ be in the PATH. We did that above.
 which -- $TARGET-as || echo $TARGET-as is not in the PATH
- 
+
 mkdir build-gcc
 cd build-gcc
 ../gcc-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
@@ -95,7 +95,7 @@ make clean
 make kernel
 ```
 
-* To compile both kernel and bootloader, just run the following : 
+* To compile both kernel and bootloader, just run the following :
 ```bash
 make all
 ```
